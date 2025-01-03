@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:animate_do/animate_do.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 import 'package:file_picker/file_picker.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -60,57 +63,160 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Dulu'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            if (_isLoading)
-              CircularProgressIndicator()
-            else
-              ElevatedButton(
-                onPressed: () {
-                  final email = _emailController.text.trim();
-                  final password = _passwordController.text.trim();
-                  if (email.isNotEmpty && password.isNotEmpty) {
-                    login(email, password);
-                  } else {
-                    setState(() {
-                      _errorMessage = 'Please fill in all fields';
-                    });
-                  }
-                },
-                child: Text('Login'),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 400,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/background.png'),
+                    fit: BoxFit.fill
+                  )
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      left: 30,
+                      width: 80,
+                      height: 200,
+                      child: FadeInUp(duration: const Duration(seconds: 1), child: Container(
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/light-1.png')
+                          )
+                        ),
+                      )),
+                    ),
+                    Positioned(
+                      left: 140,
+                      width: 80,
+                      height: 150,
+                      child: FadeInUp(duration: const Duration(milliseconds: 1200), child: Container(
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/light-2.png')
+                          )
+                        ),
+                      )),
+                    ),
+                    Positioned(
+                      right: 40,
+                      top: 40,
+                      width: 80,
+                      height: 150,
+                      child: FadeInUp(duration: const Duration(milliseconds: 1300), child: Container(
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/clock.png')
+                          )
+                        ),
+                      )),
+                    ),
+                    Positioned(
+                      child: FadeInUp(duration: const Duration(milliseconds: 1600), child: Container(
+                        margin: const EdgeInsets.only(top: 50),
+                        child: const Center(
+                          child: Text("Login", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),),
+                        ),
+                      )),
+                    )
+                  ],
+                ),
               ),
-            if (_errorMessage != null) ...[
-              SizedBox(height: 20),
-              Text(
-                _errorMessage!,
-                style: TextStyle(color: Colors.red),
-              ),
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  children: <Widget>[
+                    FadeInUp(duration: const Duration(milliseconds: 1800), child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromRGBO(143, 148, 251, .2),
+                            blurRadius: 20.0,
+                            offset: Offset(0, 10)
+                          )
+                        ]
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: const BoxDecoration(
+                              border: Border(bottom: BorderSide(color:  Color.fromRGBO(143, 148, 251, 1)))
+                            ),
+                            child: TextField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Email or Phone number",
+                                hintStyle: TextStyle(color: Colors.grey[700])
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _passwordController,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Password",
+                                hintStyle: TextStyle(color: Colors.grey[700])
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
+                    const SizedBox(height: 20),
+                    if (_errorMessage != null) ...[
+                      Text(
+                        _errorMessage!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                    if (_isLoading)
+                      const CircularProgressIndicator()
+                    else
+                      ElevatedButton(
+                        onPressed: () {
+                          final email = _emailController.text.trim();
+                          final password = _passwordController.text.trim();
+                          if (email.isNotEmpty && password.isNotEmpty) {
+                            login(email, password);
+                          } else {
+                            setState(() {
+                              _errorMessage = 'Tolong di isi dulu semua kolom';
+                            });
+                          }
+                        },
+                        child: const Text("Login"),
+                      ),
+                    const SizedBox(height: 70),
+                    FadeInUp(duration: const Duration(milliseconds: 2000), child: const Text("Forgot Password?", style: TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),)),
+                  ],
+                ),
+              )
             ],
-          ],
+          ),
         ),
-      ),
+      )
     );
   }
 }
 
+
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({super.key});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -189,8 +295,8 @@ class _MyHomePageState extends State<MyHomePage> {
           selectedIndex: selectedIndex,
           barItems: <BarItem>[
             BarItem(
-              filledIcon: Icons.bookmark_rounded,
-              outlinedIcon: Icons.bookmark_border_rounded,
+              filledIcon: Icons.shop_2,
+              outlinedIcon: Icons.shop_2,
             ),
             BarItem(
               filledIcon: Icons.favorite_rounded,
@@ -211,7 +317,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildGridView() {
-    return Column(
+  final List<Map<String, String>> coffeeShops = [
+    {'name': 'Hot Espresso', 'image': 'assets/kopi1.png'},
+    {'name': 'Ice Latte', 'image': 'assets/kopi2.png'},
+    {'name': 'Hot Cappucino', 'image': 'assets/kopi3.png'},
+    {'name': 'Hot Espresso ', 'image': 'assets/kopi4.png'},
+  ];
+
+  return Container(
+    color: Colors.black,
+    child: Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -220,21 +335,29 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                 child: TextField(
                   controller: _addItemController,
-                  decoration: InputDecoration(
-                    labelText: 'Add Item',
+                  decoration: const InputDecoration(
+                    labelText: 'Add Coffee Shop',
                     border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: Colors.white),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.brown),
+                    ),
                   ),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.brown,
+                ),
                 onPressed: () {
                   if (_addItemController.text.isNotEmpty) {
                     addItemToGrid(_addItemController.text);
                     _addItemController.clear();
                   }
                 },
-                child: Text('Add'),
+                child: const Text('Add'),
               ),
             ],
           ),
@@ -243,51 +366,69 @@ class _MyHomePageState extends State<MyHomePage> {
           child: GridView.builder(
             padding: const EdgeInsets.all(16),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
+              crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
+              childAspectRatio: 2 / 3,
             ),
-            itemCount: gridItems.length,
+            itemCount: coffeeShops.length,
             itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text('Item Details'),
-                    content: Text(gridItems[index]),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text('Close'),
-                      ),
-                    ],
-                  ),
+              return Card(
+                color: Colors.grey[900],
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: GridTile(
-                  header: Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => deleteGridItem(index),
-                    ),
-                  ),
-                  child: Container(
-                    color: Colors.blue,
-                    child: Center(
-                      child: Text(
-                        gridItems[index],
-                        style: TextStyle(color: Colors.white),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                          image: DecorationImage(
+                            image: AssetImage(coffeeShops[index]['image']!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            coffeeShops[index]['name']!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Rp25.000 - Rp50.000',
+                            style: TextStyle(
+                              color: Colors.brown,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildFavoriteListView() {
     return Column(
@@ -299,13 +440,13 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                 child: TextField(
                   controller: _addItemController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Add Favorite',
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
                   if (_addItemController.text.isNotEmpty) {
@@ -313,7 +454,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     _addItemController.clear();
                   }
                 },
-                child: Text('Add'),
+                child: const Text('Add'),
               ),
             ],
           ),
@@ -324,10 +465,10 @@ class _MyHomePageState extends State<MyHomePage> {
             itemCount: favoriteItems.length,
             itemBuilder: (context, index) {
               return ListTile(
-                leading: Icon(Icons.favorite, color: Colors.red),
+                leading: const Icon(Icons.favorite, color: Colors.red),
                 title: Text(favoriteItems[index]),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
+                  icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () => removeItemFromFavorites(favoriteItems[index]),
                 ),
               );
@@ -373,22 +514,23 @@ class _MyHomePageState extends State<MyHomePage> {
           if (result != null) {
             String? filePath = result.files.single.path;
             if (filePath != null) {
-              if (filePath.endsWith('.jpeg') || filePath.endsWith('.png'))
-              ScaffoldMessenger.of(context).showSnackBar(
+              if (filePath.endsWith('.jpeg') || filePath.endsWith('.png')) {
+                ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('File selected: $filePath')),
               );
+              }
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('No file selected')),
+                const SnackBar(content: Text('No file selected')),
               );
             }
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('File selection cancelled')),
+              const SnackBar(content: Text('File selection cancelled')),
             );
           }
         },
-        child: Text('Upload File'),
+        child: const Text('Upload File'),
       ),
     );
   }
